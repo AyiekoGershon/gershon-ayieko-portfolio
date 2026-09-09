@@ -1,0 +1,16 @@
+{
+  "name": "gershon-ayieko-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Gershon Ayieko — Data, AI & Automation Engineering portfolio. Animated logo splash screen + editorial dark interface.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "logo": "python scripts/process_logo.py"
+  },
+  "devDependencies": {
+    "vite": "^6.4.3"
+  }
+}
