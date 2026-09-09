@@ -18,7 +18,7 @@ import os
 import sys
 from collections import deque
 
-from PIL import Image
+from PIL import Image, ImageFilter
 
 Image.MAX_IMAGE_PIXELS = None
 
@@ -219,7 +219,9 @@ if tw > MAX_W:
 
 trimmed.save(os.path.join(OUT, "logo-clean.png"))
 try:
-    trimmed.convert("RGB").save(os.path.join(OUT, "logo-clean.webp"), "WEBP", quality=88, method=6)
+    # NOTE: keep RGBA when exporting WebP — converting to RGB bakes the
+    # keyed-out background (checkerboard) back into the image.
+    trimmed.save(os.path.join(OUT, "logo-clean.webp"), "WEBP", quality=88, method=6)
     print("webp ok")
 except Exception as e:
     print("webp skipped:", e)
