@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "logo": "python scripts/process_logo.py"
+    "logo": "python scripts/process_logo.py",
+    "frames": "python scripts/process_frames.py"
   },
   "devDependencies": {
     "vite": "^6.4.3"

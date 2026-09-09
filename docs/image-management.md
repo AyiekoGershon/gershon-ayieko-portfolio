@@ -21,6 +21,10 @@ Accepted extensions: `.jpg`, `.jpeg`, `.png`, `.webp` (tried in that order).
 Project images are configured in `src/data/projects.js` via the `image` field
 (base path without extension); remove the field to restore the SVG schematic.
 
+The current frames were converted from the user's pasted originals via
+`npm run frames` (or `python scripts/process_frames.py`); raw originals are
+archived in `frames-source/` and are not shipped in the build.
+
 ## Logo assets
 
 The source artwork is `mylogo.jpg` (flattened raster with a baked checkerboard).
