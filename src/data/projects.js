@@ -28,6 +28,7 @@ export const projects = [
     year: '2026',
     featured: true,
     visual: 'pipeline',
+    image: 'frames/frame-03',
   },
   {
     title: 'Finance Portfolio Pipeline',
@@ -41,6 +42,7 @@ export const projects = [
     year: '2026',
     featured: true,
     visual: 'pipeline',
+    image: 'frames/frame-07',
   },
   {
     title: 'Travel Documentation Assistant',
@@ -54,6 +56,7 @@ export const projects = [
     year: '2026',
     featured: true,
     visual: 'llm',
+    image: 'frames/frame-02',
   },
   {
     title: 'Survey Platform',

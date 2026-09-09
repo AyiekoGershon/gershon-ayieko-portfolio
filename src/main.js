@@ -89,6 +89,43 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* ============================================================
+   FRAME IMAGES — progressive hydration
+   Attempts common extensions for frames/frame-XX assets.
+   Missing files simply leave the slot hidden (no broken images).
+   ============================================================ */
+const FRAME_EXTS = ['.jpg', '.jpeg', '.png', '.webp'];
+
+function hydrateFrame(img, slot) {
+  const base = img.dataset.frame;
+  if (!base) return;
+  let i = 0;
+  const tryNext = () => {
+    if (i >= FRAME_EXTS.length) return;
+    const ext = FRAME_EXTS[i];
+    const probe = new Image();
+    probe.onload = () => {
+      img.src = base + ext;
+      img.classList.add('loaded');
+      if (slot) slot.classList.add('on');
+    };
+    probe.onerror = () => {
+      i += 1;
+      tryNext();
+    };
+    probe.src = base + ext;
+  };
+  tryNext();
+}
+
+function hydrateAllFrames() {
+  document.querySelectorAll('img[data-frame]').forEach((img) => {
+    if (img.dataset.hydrated) return;
+    img.dataset.hydrated = '1';
+    hydrateFrame(img, img.closest('.frame-slot'));
+  });
+}
+
+/* ============================================================
    PROJECTS — render + filters
    ============================================================ */
 const projectGrid = document.getElementById('projectGrid');
@@ -110,6 +147,7 @@ function renderProjects(filter = 'all') {
       <article class="project-card info-card" style="--i:${i}">
         <div class="project-visual">
           ${visualSVG(p.visual)}
+          ${p.image ? `<img class="project-photo" data-frame="${p.image}" alt="" loading="lazy" />` : ''}
           <div class="visual-scan" aria-hidden="true"></div>
           <div class="visual-tag">${p.categories[0].toUpperCase().replace('-', ' ')}</div>
         </div>
@@ -138,9 +176,12 @@ function renderProjects(filter = 'all') {
       </article>`
     )
     .join('');
+
+  hydrateAllFrames();
 }
 
 renderProjects('all');
+hydrateAllFrames();
 
 filterButtons.forEach((btn) => {
   btn.addEventListener('click', () => {

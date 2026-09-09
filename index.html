@@ -100,6 +100,9 @@
          01 — HERO
          ============================================================ -->
     <section class="hero" id="hero" aria-label="Introduction">
+      <div class="hero-photo frame-slot" aria-hidden="true">
+        <img data-frame="frames/frame-04" alt="" loading="lazy" />
+      </div>
       <div class="hero-grid" aria-hidden="true"></div>
       <div class="hero-glow" aria-hidden="true"></div>
       <div class="shell hero-shell">
@@ -277,6 +280,21 @@
     </section>
 
     <!-- ============================================================
+         VISUAL BAND — cinematic frame between capabilities and systems
+         ============================================================ -->
+    <section class="visual-band frame-slot" id="visualBand" aria-label="Field note">
+      <div class="band-frame">
+        <img class="band-img" data-frame="frames/frame-01" alt="AI systems hologram" loading="lazy" />
+        <div class="band-overlay" aria-hidden="true"></div>
+        <div class="shell band-content">
+          <div class="section-marker"><span>// Field Note</span></div>
+          <p class="band-statement font-display">INTELLIGENCE, ENGINEERED<br />INTO EVERY LAYER.</p>
+          <p class="band-meta">AI · AUTOMATION · ANALYTICS — FROM FIRST PIPELINE TO FINAL DECISION</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
          03 — SELECTED SYSTEMS (projects)
          ============================================================ -->
     <section class="section section-alt" id="systems" aria-label="Selected systems">
@@ -346,6 +364,10 @@
               <div class="exp-tag">DATA · AI · AUTOMATION</div>
             </div>
             <div class="exp-body info-card">
+              <figure class="exp-photo frame-slot">
+                <img data-frame="frames/frame-06" alt="n8n automation workflow with AI agent nodes" loading="lazy" />
+                <figcaption>// N8N WORKFLOW — AI AGENTS · OPENAI · GOOGLE GENAI · SHEET AUTOMATION</figcaption>
+              </figure>
               <h3 class="exp-role">Data / AI / Automation Engineer</h3>
               <div class="exp-org">Decodelabs</div>
               <p class="exp-desc">
@@ -556,6 +578,12 @@
               engineer: <span class="strong">secure, documented, production-ready</span> by default.
             </p>
           </div>
+          <figure class="about-photo-card frame-slot">
+            <div class="about-photo-frame">
+              <img data-frame="frames/frame-05" alt="Engineer at work — code reflected in glasses" loading="lazy" />
+            </div>
+            <figcaption>// BEHIND THE MONITOR — BUILD, SHIP, REPEAT.</figcaption>
+          </figure>
           <div class="about-principles">
             <div class="principle"><span class="p-num">01</span><span>Build for reliability, not demos.</span></div>
             <div class="principle"><span class="p-num">02</span><span>Automate the repetitive first.</span></div>
