@@ -315,6 +315,18 @@ button { font-family: inherit; cursor: pointer; }
   font-size: 0.6rem;
   color: var(--accent);
 }
+.mobile-socials {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1rem 0 0.2rem;
+  flex-wrap: wrap;
+}
+.mobile-socials a {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+}
 
 /* ============================================================
    BUTTONS
@@ -447,7 +459,7 @@ button { font-family: inherit; cursor: pointer; }
 .hero-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(3.1rem, 10.5vw, 8.5rem);
+  font-size: clamp(2.1rem, 10.5vw, 8.5rem);
   line-height: 0.92;
   letter-spacing: -0.01em;
   margin: 0 0 2.6rem;
@@ -627,7 +639,7 @@ body.site-ready .headline-line:nth-child(3) span { transition-delay: 0.24s; }
 .section-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  font-size: clamp(1.9rem, 6.4vw, 4.8rem);
   line-height: 0.98;
   letter-spacing: -0.01em;
   margin: 0;
@@ -759,7 +771,6 @@ body.site-ready .headline-line:nth-child(3) span { transition-delay: 0.24s; }
   font-size: 0.66rem;
   letter-spacing: 0.2em;
   color: var(--muted);
-  white-space: nowrap;
 }
 .foundation-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
 
@@ -962,7 +973,7 @@ body.site-ready .headline-line:nth-child(3) span { transition-delay: 0.24s; }
 }
 .band-statement {
   font-weight: 700;
-  font-size: clamp(1.9rem, 4.6vw, 4rem);
+  font-size: clamp(1.5rem, 4.6vw, 4rem);
   line-height: 1.02;
   text-transform: uppercase;
   margin: 0 0 0.8rem;
@@ -1009,6 +1020,7 @@ body.site-ready .headline-line:nth-child(3) span { transition-delay: 0.24s; }
   gap: clamp(1.5rem, 4vw, 4rem);
   padding: 1.6rem 0 1.6rem 2.4rem;
 }
+.exp-item > * { min-width: 0; }
 .exp-dot {
   position: absolute;
   left: -4.5px;
@@ -1193,7 +1205,7 @@ body.site-ready .headline-line:nth-child(3) span { transition-delay: 0.24s; }
 /* ============================================================
    CONTACT
    ============================================================ */
-.contact-title { font-size: clamp(2.6rem, 7vw, 5.5rem); }
+.contact-title { font-size: clamp(1.9rem, 8vw, 5.5rem); }
 .contact-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
@@ -1418,7 +1430,7 @@ textarea.form-input { resize: vertical; min-height: 110px; }
   justify-content: space-between;
   gap: 1.5rem;
   padding-top: 0.9rem;
-  padding-bottom: 0.9rem;
+  padding-bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
 }
 .sticky-title { font-size: 1.1rem; letter-spacing: 0.1em; }
 .sticky-sub {
@@ -1485,8 +1497,8 @@ textarea.form-input { resize: vertical; min-height: 110px; }
   .section-head { grid-template-columns: 1fr; gap: 1.2rem; }
   .section-lede { justify-self: start; }
   .hero-stats { grid-template-columns: repeat(2, 1fr); row-gap: 1.6rem; }
-  .exp-item { grid-template-columns: 1fr; padding-left: 2rem; }
-  .exp-meta { display: flex; gap: 1rem; align-items: baseline; }
+  .exp-item { grid-template-columns: minmax(0, 1fr); padding-left: 2rem; }
+  .exp-meta { display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap; }
   .contact-grid { grid-template-columns: 1fr; }
   .about-shell { grid-template-columns: 1fr; }
   .footer-row { grid-template-columns: 1fr; }
@@ -1498,9 +1510,40 @@ textarea.form-input { resize: vertical; min-height: 110px; }
   .form-row { grid-template-columns: 1fr; }
   .hero-meta { font-size: 0.58rem; gap: 0.5rem; }
   .sticky-sub { display: none; }
-  .sticky-row { padding-top: 0.7rem; padding-bottom: 0.7rem; }
   .brand-sub { display: none; }
   .splash-mark { width: 116px; }
+
+  /* Prevent iOS Safari auto-zoom on input focus */
+  .form-input { font-size: 16px; }
+
+  /* Long contact values wrap instead of overflowing */
+  .contact-line { flex-wrap: wrap; }
+  .contact-line span { word-break: break-all; min-width: 0; }
+
+  .band-frame { height: clamp(320px, 52vh, 460px); }
+  .exp-photo img { height: 200px; }
+  .about-photo-card img { height: 190px; }
+}
+
+@media (max-width: 520px) {
+  /* Sticky CTA stacks for small screens */
+  .sticky-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+    text-align: center;
+    padding-top: 0.8rem;
+  }
+  .sticky-title { font-size: 0.78rem; letter-spacing: 0.06em; }
+  .sticky-row .btn { justify-content: center; }
+}
+
+@media (max-width: 380px) {
+  /* Compact header: drop social icons, keep the menu */
+  .header-actions .icon-btn { display: none; }
+  .brand-mark { width: 30px; height: 30px; }
+  .brand-name { font-size: 0.88rem; letter-spacing: 0.08em; }
+  .header-row { gap: 0.8rem; }
 }
 
 /* ============================================================
