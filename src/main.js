@@ -90,31 +90,29 @@ document.addEventListener('keydown', (e) => {
 
 /* ============================================================
    FRAME IMAGES — progressive hydration
-   Attempts common extensions for frames/frame-XX assets.
-   Missing files simply leave the slot hidden (no broken images).
+   WebP is the deployed format, so it is checked first.
+   Candidates are verified with fetch (no console 404 noise);
+   missing files simply leave the slot hidden.
    ============================================================ */
-const FRAME_EXTS = ['.jpg', '.jpeg', '.png', '.webp'];
+const FRAME_EXTS = ['.webp', '.jpg', '.jpeg', '.png'];
 
-function hydrateFrame(img, slot) {
+async function hydrateFrame(img, slot) {
   const base = img.dataset.frame;
   if (!base) return;
-  let i = 0;
-  const tryNext = () => {
-    if (i >= FRAME_EXTS.length) return;
-    const ext = FRAME_EXTS[i];
-    const probe = new Image();
-    probe.onload = () => {
-      img.src = base + ext;
-      img.classList.add('loaded');
-      if (slot) slot.classList.add('on');
-    };
-    probe.onerror = () => {
-      i += 1;
-      tryNext();
-    };
-    probe.src = base + ext;
-  };
-  tryNext();
+  for (const ext of FRAME_EXTS) {
+    const url = base + ext;
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        img.src = url;
+        img.classList.add('loaded');
+        if (slot) slot.classList.add('on');
+        return;
+      }
+    } catch {
+      /* keep trying next extension */
+    }
+  }
 }
 
 function hydrateAllFrames() {
