@@ -311,10 +311,6 @@ button { font-family: inherit; cursor: pointer; }
   gap: 0.9rem;
   align-items: baseline;
 }
-.mobile-nav .nav-link span {
-  font-size: 0.6rem;
-  color: var(--accent);
-}
 .mobile-socials {
   display: flex;
   gap: 1.5rem;
@@ -1335,16 +1331,6 @@ textarea.form-input { resize: vertical; min-height: 110px; }
   box-shadow: 0 0 8px var(--accent-glow);
 }
 .n-user { color: var(--muted); font-size: 0.7rem; }
-
-.ref-row { display: grid; gap: 1rem; }
-.ref-name { font-weight: 600; font-size: 0.9rem; }
-.ref-role { color: var(--muted); font-size: 0.78rem; margin: 0.15rem 0; }
-.ref-mail {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--accent);
-  word-break: break-all;
-}
 
 /* ============================================================
    FOOTER
