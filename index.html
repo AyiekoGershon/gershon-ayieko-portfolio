@@ -68,6 +68,7 @@
         <a class="nav-link" href="#experience">Experience</a>
         <a class="nav-link" href="#stack">Stack</a>
         <a class="nav-link" href="#about">About</a>
+        <a class="nav-link" href="#assistant">Assistant</a>
         <a class="nav-link" href="#contact">Contact</a>
       </nav>
 
@@ -91,7 +92,8 @@
       <a class="nav-link" href="#experience"><span>03</span>Experience</a>
       <a class="nav-link" href="#stack"><span>04</span>Stack</a>
       <a class="nav-link" href="#about"><span>05</span>About</a>
-      <a class="nav-link" href="#contact"><span>06</span>Contact</a>
+      <a class="nav-link" href="#assistant"><span>06</span>Assistant</a>
+      <a class="nav-link" href="#contact"><span>07</span>Contact</a>
       <div class="mobile-socials">
         <a href="https://github.com/AyiekoGershon" target="_blank" rel="noopener">GITHUB ↗</a>
         <a href="https://www.linkedin.com/in/gershon-ayieko-2a96162b0" target="_blank" rel="noopener">LINKEDIN ↗</a>
@@ -599,13 +601,96 @@
     </section>
 
     <!-- ============================================================
-         08 — CONTACT
+         08 — THE ASSISTANT (live RAG pipeline)
+         ============================================================ -->
+    <section class="section section-alt" id="assistant" aria-label="The assistant">
+      <div class="shell">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-marker"><span>08 — The Assistant</span></div>
+            <h2 class="section-title">
+              A live RAG agent.<br />
+              <span class="text-stroke">Ask it anything</span><br />
+              <span class="accent">about me.</span>
+            </h2>
+          </div>
+          <p class="section-lede">
+            The chat button on this page is not a plugin — it's a retrieval-augmented
+            agent I engineered: locked persona, strict knowledge base, input/output
+            guardrails, and lead capture when you want to work together.
+          </p>
+        </div>
+
+        <div class="pipeline-grid reveal-stagger">
+          <article class="pipe-card info-card">
+            <div class="pipe-index">/ 01</div>
+            <h3 class="pipe-title">KNOWLEDGE BASE</h3>
+            <p class="pipe-desc">Resume + verified GitHub facts, injected as the only allowed context. No invented claims.</p>
+            <div class="pipe-tags"><span>resume.json</span><span>github-verified</span></div>
+          </article>
+          <article class="pipe-card info-card">
+            <div class="pipe-index">/ 02</div>
+            <h3 class="pipe-title">STRICT RAG</h3>
+            <p class="pipe-desc">Answers must cite the KB. Outside it, the agent says "I don't know" and points to contact.</p>
+            <div class="pipe-tags"><span>cite-source</span><span>no-hallucination</span></div>
+          </article>
+          <article class="pipe-card info-card">
+            <div class="pipe-index">/ 03</div>
+            <h3 class="pipe-title">PERSONA LOCK</h3>
+            <p class="pipe-desc">Schema-locked system prompt, low temperature, JSON-only output contract.</p>
+            <div class="pipe-tags"><span>temp 0.2</span><span>json-schema</span></div>
+          </article>
+          <article class="pipe-card info-card">
+            <div class="pipe-index">/ 04</div>
+            <h3 class="pipe-title">GUARDRAILS</h3>
+            <p class="pipe-desc">Input filtering (injection, abuse, length caps) and output validation before it reaches you.</p>
+            <div class="pipe-tags"><span>input-filter</span><span>output-validate</span><span>rate-limit</span></div>
+          </article>
+          <article class="pipe-card info-card">
+            <div class="pipe-index">/ 05</div>
+            <h3 class="pipe-title">LEAD CAPTURE</h3>
+            <p class="pipe-desc">Service intent triggers contact collection — validated email is forwarded to Gershon.</p>
+            <div class="pipe-tags"><span>intent:lead</span><span>formspree</span></div>
+          </article>
+        </div>
+
+        <div class="assistant-demo reveal">
+          <div class="demo-term">
+            <div class="term-head">
+              <span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="term-title">rider — sample trace</span>
+            </div>
+            <div class="demo-body">
+              <p><span class="t-user">VISITOR</span> what does gershon build?</p>
+              <p><span class="t-assist">RIDER</span> Data pipelines, AI systems (RAG, LLM apps), automation, analytics, and ML models — engineered end-to-end. <span class="t-cite">(kb:services)</span></p>
+              <p><span class="t-user">VISITOR</span> i need an automation workflow — can he contact me?</p>
+              <p><span class="t-assist">RIDER</span> Noted — what email should Gershon use? I'll forward it as a lead.</p>
+              <p><span class="t-guard">GUARD</span> intent:lead · email validated · → formspree <span class="t-ok">OK</span></p>
+            </div>
+          </div>
+          <div class="demo-note">
+            <div class="section-marker"><span>// How I Build Agents</span></div>
+            <p>
+              This is the pattern I apply to production agents: a bounded knowledge base,
+              a persona contract the model cannot leave, validation on both sides of the
+              model call, and a useful side effect — here, a lead — wired to a real system.
+            </p>
+            <p class="demo-meta">
+              PHASE 1: schema-locked prompt + filters · PHASE 2: NVIDIA NeMo Guardrails wrapper
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         09 — CONTACT
          ============================================================ -->
     <section class="section" id="contact" aria-label="Contact">
       <div class="shell">
         <div class="section-head reveal">
           <div>
-            <div class="section-marker"><span>07 — Contact</span></div>
+            <div class="section-marker"><span>09 — Contact</span></div>
             <h2 class="section-title contact-title">
               LET'S BUILD<br />
               <span class="accent">SOMETHING USEFUL.</span>
@@ -741,6 +826,64 @@
       </div>
       <a class="btn btn-accent" href="#contact">OPEN A CHANNEL <span aria-hidden="true">→</span></a>
     </div>
+  </div>
+
+  <!-- ============================================================
+       RIDER — AI ASSISTANT WIDGET
+       ============================================================ -->
+  <button
+    type="button"
+    class="assistant-fab"
+    id="assistantFab"
+    aria-label="Open Gershon's AI assistant"
+    aria-expanded="false"
+    aria-controls="assistantPanel"
+  >
+    <span class="fab-ring" aria-hidden="true"></span>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M21 12a8 8 0 0 1-8 8H4l2.2-2.9A8 8 0 1 1 21 12Z" />
+      <circle cx="9" cy="12" r="0.6" fill="currentColor" />
+      <circle cx="12.5" cy="12" r="0.6" fill="currentColor" />
+      <circle cx="16" cy="12" r="0.6" fill="currentColor" />
+    </svg>
+  </button>
+
+  <div class="assistant-panel" id="assistantPanel" role="dialog" aria-modal="false" aria-label="RIDER — Gershon's AI assistant" hidden>
+    <header class="ap-head">
+      <div class="ap-brand">
+        <img src="./assets/favicon.png" alt="" class="ap-mark" width="30" height="30" />
+        <div>
+          <div class="ap-name font-display">RIDER <span class="ap-badge">AI</span></div>
+          <div class="ap-sub">GERSHON'S ASSISTANT · RAG-GUARDED</div>
+        </div>
+      </div>
+      <button type="button" class="ap-close" id="assistantClose" aria-label="Close assistant">✕</button>
+    </header>
+
+    <div class="ap-log" id="assistantLog" role="log" aria-live="polite" aria-label="Conversation"></div>
+
+    <div class="ap-chips" id="assistantChips" aria-label="Suggested questions">
+      <button type="button" data-q="What does Gershon build?">What does Gershon build?</button>
+      <button type="button" data-q="Which projects are on his GitHub?">Projects</button>
+      <button type="button" data-q="What is Gershon's experience?">Experience</button>
+      <button type="button" data-q="I need a data pipeline built — can Gershon contact me?">I need work done →</button>
+    </div>
+
+    <form class="ap-form" id="assistantForm">
+      <input
+        id="assistantInput"
+        type="text"
+        placeholder="Ask about Gershon…"
+        autocomplete="off"
+        maxlength="500"
+        aria-label="Message the assistant"
+      />
+      <button type="submit" aria-label="Send message">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z" /></svg>
+      </button>
+    </form>
+
+    <footer class="ap-foot">DEEPSEEK · STRICT RAG · GUARDRAILED · LEAD CAPTURE</footer>
   </div>
 
   <!-- Toast -->

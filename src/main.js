@@ -1,5 +1,6 @@
 import './styles.css';
 import { projects, visualSVG } from './data/projects.js';
+import { assistantGreeting } from './data/knowledge-base.js';
 
 /* ============================================================
    Environment helpers
@@ -285,7 +286,7 @@ const sectionObserver = new IntersectionObserver(
   },
   { rootMargin: '-38% 0px -55% 0px' }
 );
-['capabilities', 'systems', 'experience', 'stack', 'about', 'contact'].forEach((id) => {
+['capabilities', 'systems', 'experience', 'stack', 'about', 'assistant', 'contact'].forEach((id) => {
   const el = document.getElementById(id);
   if (el) sectionObserver.observe(el);
 });
@@ -302,7 +303,11 @@ const stickyObserver = new IntersectionObserver(
     const heroGone = hero.getBoundingClientRect().bottom < 0;
     const contactRect = contact.getBoundingClientRect();
     const atContact = contactRect.top < window.innerHeight && contactRect.bottom > 0;
-    stickyCta.classList.toggle('visible', heroGone && !atContact);
+    const showSticky = heroGone && !atContact;
+    stickyCta.classList.toggle('visible', showSticky);
+    // Raise the assistant FAB above the sticky bar when it is visible
+    const fab = document.getElementById('assistantFab');
+    if (fab) fab.classList.toggle('raised', showSticky);
   },
   { threshold: 0 }
 );
@@ -415,3 +420,134 @@ if (grain && !REDUCED_MOTION) {
    FOOTER YEAR
    ============================================================ */
 document.getElementById('year').textContent = String(new Date().getFullYear());
+
+/* ============================================================
+   RIDER — ASSISTANT WIDGET
+   ============================================================ */
+const fab = document.getElementById('assistantFab');
+const panel = document.getElementById('assistantPanel');
+const closeBtn = document.getElementById('assistantClose');
+const logEl = document.getElementById('assistantLog');
+const chipsEl = document.getElementById('assistantChips');
+const formEl = document.getElementById('assistantForm');
+const inputEl = document.getElementById('assistantInput');
+
+const assistantState = {
+  history: [], // { role: 'user' | 'assistant', content }
+  busy: false,
+  greeted: false,
+};
+
+function setPanelOpen(open) {
+  panel.hidden = !open;
+  fab.setAttribute('aria-expanded', String(open));
+  fab.setAttribute('aria-label', open ? 'Close Gershon\'s AI assistant' : 'Open Gershon\'s AI assistant');
+  if (open) {
+    if (!assistantState.greeted) {
+      assistantState.greeted = true;
+      addAssistantMessage(assistantGreeting);
+    }
+    requestAnimationFrame(() => inputEl.focus());
+  }
+}
+
+fab.addEventListener('click', () => setPanelOpen(panel.hidden));
+closeBtn.addEventListener('click', () => {
+  setPanelOpen(false);
+  fab.focus();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !panel.hidden) {
+    setPanelOpen(false);
+    fab.focus();
+  }
+});
+
+function addBubble(role, text, { error = false, note = '' } = {}) {
+  const div = document.createElement('div');
+  div.className = `ap-msg ${role}${error ? ' error' : ''}`;
+  div.textContent = text;
+  if (note) {
+    const span = document.createElement('span');
+    span.className = 'note';
+    span.textContent = note;
+    div.appendChild(span);
+  }
+  logEl.appendChild(div);
+  logEl.scrollTop = logEl.scrollHeight;
+  return div;
+}
+
+function addAssistantMessage(text, opts) {
+  assistantState.history.push({ role: 'assistant', content: text });
+  return addBubble('assistant', text, opts);
+}
+
+function showTyping() {
+  const el = document.createElement('div');
+  el.className = 'ap-typing';
+  el.setAttribute('aria-label', 'RIDER is typing');
+  el.innerHTML = '<i></i><i></i><i></i>';
+  logEl.appendChild(el);
+  logEl.scrollTop = logEl.scrollHeight;
+  return el;
+}
+
+async function sendAssistant(text) {
+  if (assistantState.busy) return;
+  const message = String(text || '').trim();
+  if (!message) return;
+
+  chipsEl.hidden = true;
+  assistantState.history.push({ role: 'user', content: message });
+  addBubble('user', message);
+  inputEl.value = '';
+  assistantState.busy = true;
+
+  const submitBtn = formEl.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  const typing = showTyping();
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: assistantState.history.slice(-10) }),
+    });
+    const data = await res.json().catch(() => ({}));
+    typing.remove();
+
+    if (res.ok && data.reply) {
+      const note = data.leadCaptured
+        ? 'LEAD CAPTURED — GERSHON WILL REACH OUT WITHIN 48H'
+        : '';
+      addAssistantMessage(data.reply, { note });
+    } else {
+      const fallback =
+        data.reply ||
+        'The assistant is unavailable right now. Email gershonayieko3@gmail.com directly.';
+      addBubble('assistant', fallback, { error: true });
+    }
+  } catch {
+    typing.remove();
+    addBubble(
+      'assistant',
+      'Connection lost. Email gershonayieko3@gmail.com directly.',
+      { error: true }
+    );
+  } finally {
+    assistantState.busy = false;
+    submitBtn.disabled = false;
+    inputEl.focus();
+  }
+}
+
+formEl.addEventListener('submit', (e) => {
+  e.preventDefault();
+  sendAssistant(inputEl.value);
+});
+
+chipsEl.querySelectorAll('button').forEach((chip) => {
+  chip.addEventListener('click', () => sendAssistant(chip.dataset.q));
+});

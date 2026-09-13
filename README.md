@@ -12,10 +12,14 @@ Engineer, Nairobi, Kenya.
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
+npm run dev      # http://localhost:5173 (assistant runs in mock mode without a key)
 npm run build    # production build → dist/
 npm run preview  # preview the production build
 ```
+
+> **RIDER assistant:** the floating chat button calls `/api/chat` — a Vercel
+> serverless function (DeepSeek). Locally it runs in mock mode until you set
+> `DEEPSEEK_API_KEY` in a `.env` file. See `docs/assistant.md`.
 
 ## Repositories & links
 
@@ -34,7 +38,8 @@ npm run preview  # preview the production build
 | Add / remove a project | `src/data/projects.js` — no HTML changes needed |
 | Change project images/visuals | `src/data/projects.js` (`visual` field) — see `docs/image-management.md` |
 | Change GitHub / LinkedIn / email | `index.html` (header, contact) + `src/main.js` (`openMailto`) |
-| Configure the contact form | `.env` → `VITE_FORMSPREE_ENDPOINT` — see `docs/contact-form.md` |
+| Contact form | `.env` → `VITE_FORMSPREE_ENDPOINT` — see `docs/contact-form.md` |
+| Enable the AI assistant | `DEEPSEEK_API_KEY` in Vercel env — see `docs/assistant.md` |
 | Change the accent color | `src/styles.css` → `:root { --accent: … }` |
 | Deploy an update | `docs/deployment.md` |
 | Regenerate the logo assets | `python scripts/process_logo.py` (requires Pillow) |
@@ -46,6 +51,7 @@ npm run preview  # preview the production build
 - `docs/configuration.md` — env vars and site-wide settings
 - `docs/content-management.md` — editing copy, projects, sections
 - `docs/contact-form.md` — Formspree setup, fallback, troubleshooting
+- `docs/assistant.md` — RIDER assistant: architecture, guardrails, costs, NeMo upgrade
 - `docs/deployment.md` — Netlify / static hosting
 - `docs/image-management.md` — logo pipeline and project visuals
 - `docs/animation-system.md` — motion inventory and reduced-motion behavior
