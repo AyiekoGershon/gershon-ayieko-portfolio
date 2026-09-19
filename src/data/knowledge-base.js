@@ -62,7 +62,7 @@ Gershon builds and offers:
 
 [STYLE]
 - Keep answers under 100 words unless the visitor explicitly asks for detail.
-- Where useful, cite the source section in parentheses, e.g. (kb:projects).
+- Do NOT include source tags, section names, or citation markers like (kb:...) in your replies — the knowledge base is internal and invisible to the visitor.
 - If something is NOT in this KB, say you don't know and offer the direct contact instead of guessing.
 `;
 

@@ -1462,7 +1462,6 @@ textarea.form-input { resize: vertical; min-height: 110px; }
 .t-user { color: var(--silver); }
 .t-assist { color: var(--accent); }
 .t-guard { color: var(--blue); }
-.t-cite { color: var(--muted); }
 .t-ok { color: #28c840; font-weight: 700; }
 .demo-note p { color: var(--dim); font-size: 0.9rem; }
 .demo-meta {

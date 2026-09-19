@@ -19,8 +19,9 @@ Browser widget ──POST /api/chat──▶ Vercel serverless (api/chat.js)
 ```
 
 - The knowledge base (`src/data/knowledge-base.js`) is the ONLY allowed context.
-- The model must answer from the KB, cite sections, and say "I don't know"
-  outside it. JSON-only output is enforced via `response_format: json_object`.
+- The model must answer from the KB and say "I don't know" outside it — source
+  sections stay internal and never appear in replies. JSON-only output is
+  enforced via `response_format: json_object`.
 - Keys live only in server env vars — never in the client bundle.
 
 ## Setup
