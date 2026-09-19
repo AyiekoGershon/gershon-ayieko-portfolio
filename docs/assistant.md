@@ -35,6 +35,7 @@ Project → Settings → Environment Variables:
 | `DEEPSEEK_MODEL` | `deepseek-chat` |
 | `ASSISTANT_TEMPERATURE` | `0.2` (lower = stricter persona) |
 | `ASSISTANT_MAX_MESSAGES_PER_HOUR` | `20` (per visitor, per instance) |
+| `TYPESAFE_API_KEY` | optional — enables the Jev guardrail layer |
 | `FORMSPREE_ENDPOINT` | Formspree form URL for leads (server-side, no `VITE_`) |
 
 Redeploy after saving. No code changes needed — `api/` is auto-detected.
@@ -69,9 +70,19 @@ visitor to email directly. Leaks are never stored by the site itself.
 |---|---|
 | Persona lock | system contract + temperature 0.2 + JSON schema |
 | Input | control-char strip, 2000-char cap, injection-pattern refusal |
+| **Jev pre-guard** | one batched System One call: `is_jailbreak` (noul) + `intent` (choice: chat/lead/abuse/off_topic). Blocks jailbreaks ≥ 0.6 and abuse with confidence ≥ 0.5 |
+| **Jev post-guard** | one batched call over `{reply, knowledge_base}`: `kb_supported` + `is_safe` (nouls). Unverified or unsafe replies are replaced with a safe fallback |
 | Output | JSON validation, 900-char reply cap, graceful fallback message |
 | Rate limit | per-IP, 20 msg/hour, in-memory (per serverless instance) |
 | Abuse | "ignore instructions" style inputs are refused without an LLM call |
+
+### Jev (TypeSafe System One)
+
+`api/jev.js` wraps `POST https://api.typesafe.ai/v1/systemone` with model
+`jev-latest`. Enable by setting `TYPESAFE_API_KEY`; when unset, the pipeline
+skips Jev gracefully and the regex/JSON guards still run. Jev supplies
+calibrated probabilities — thresholds live in code, per the TypeSafe
+philosophy: the model judges, code decides. Docs: https://docs.typesafe.ai/api.md
 
 ## Upgrading to NeMo Guardrails (Phase 2)
 

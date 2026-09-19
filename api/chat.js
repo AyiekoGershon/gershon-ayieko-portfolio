@@ -14,6 +14,12 @@
  */
 
 import { knowledgeBase } from '../src/data/knowledge-base.js';
+import {
+  askJev,
+  jevEnabled,
+  PRE_GUARD_QUESTIONS,
+  POST_GUARD_QUESTIONS,
+} from './jev.js';
 
 const MODEL = process.env.DEEPSEEK_MODEL || 'deepseek-chat';
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || '';
@@ -226,6 +232,39 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Jev pre-guard: calibrated jailbreak + intent judgments (skipped without a key)
+  if (jevEnabled()) {
+    try {
+      const pre = await askJev(lastUser, PRE_GUARD_QUESTIONS);
+      const jailbreak = pre.is_jailbreak?.noul ?? 0;
+      const intent = pre.intent?.choice ?? 'chat';
+      const intentConf = pre.intent?.confidence ?? 0;
+
+      if (jailbreak >= 0.6) {
+        res.status(200).json({
+          ok: true,
+          intent: 'chat',
+          reply: "I stay in character: I answer questions about Gershon from his knowledge base. Ask me about his work, projects, or services.",
+          guard: { jailbreak, intent },
+        });
+        return;
+      }
+      if (intent === 'abuse' && intentConf >= 0.5) {
+        res.status(200).json({
+          ok: true,
+          intent: 'chat',
+          reply: "I can't help with that. I'm here to answer questions about Gershon and his work.",
+          guard: { jailbreak, intent },
+        });
+        return;
+      }
+      // store for logging / future routing
+      res.setHeader('x-rider-intent', intent);
+    } catch (err) {
+      console.warn('[jev] pre-guard skipped:', String(err));
+    }
+  }
+
   try {
     if (MOCK_MODE) {
       // Dev/demo mode without an API key: deterministic canned reply.
@@ -252,6 +291,32 @@ export default async function handler(req, res) {
       return;
     }
 
+    // Jev post-guard: verify the reply against the KB and check safety
+    let jevGuard = null;
+    if (jevEnabled()) {
+      try {
+        const post = await askJev(
+          { reply: parsed.reply, knowledge_base: knowledgeBase },
+          POST_GUARD_QUESTIONS
+        );
+        jevGuard = {
+          kb_supported: post.kb_supported?.noul ?? null,
+          is_safe: post.is_safe?.noul ?? null,
+        };
+        if (
+          (post.kb_supported?.noul ?? 1) < 0.5 ||
+          (post.is_safe?.noul ?? 1) < 0.5
+        ) {
+          parsed.reply =
+            "I couldn't verify my answer against Gershon's knowledge base. You can reach him directly at gershonayieko3@gmail.com.";
+          parsed.intent = 'chat';
+          parsed.lead = { email: '', phone: '', topic: '', ready: false };
+        }
+      } catch (err) {
+        console.warn('[jev] post-guard skipped:', String(err));
+      }
+    }
+
     let leadCaptured = false;
     if (parsed.intent === 'lead' && parsed.lead.ready && EMAIL_RE.test(parsed.lead.email)) {
       leadCaptured = await captureLead(parsed.lead, lastUser);
@@ -265,6 +330,7 @@ export default async function handler(req, res) {
       reply: parsed.reply,
       intent: parsed.intent,
       leadCaptured,
+      guard: jevGuard,
     });
   } catch (err) {
     console.error('[assistant]', String(err));
