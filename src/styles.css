@@ -1483,24 +1483,58 @@ textarea.form-input { resize: vertical; min-height: 110px; }
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  border: 1px solid var(--accent-dim);
-  background: var(--accent);
-  color: #031418;
+  border: 1px solid var(--border2);
+  background: #131920;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 0 34px var(--accent-glow);
-  transition: transform 0.35s var(--ease-out), background 0.3s, bottom 0.45s var(--ease-out);
+  transition: transform 0.35s var(--ease-out), background 0.3s, border-color 0.3s, bottom 0.45s var(--ease-out);
 }
 .assistant-fab:hover, .assistant-fab:focus-visible {
-  background: var(--accent-bright);
+  background: var(--card2);
+  border-color: var(--accent);
   transform: translateY(-3px);
 }
 .assistant-fab.raised { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
 .assistant-fab[aria-expanded="true"] {
-  background: transparent;
+  background: var(--card2);
   color: var(--accent);
   border-color: var(--accent);
+}
+.fab-sparkles {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.4s var(--ease-out);
+  filter: drop-shadow(0 0 7px rgba(55, 214, 232, 0.35));
+}
+.assistant-fab:hover .fab-sparkles,
+.assistant-fab:focus-visible .fab-sparkles { transform: scale(1.12); }
+
+/* Animated mini-stars around the button on hover */
+.fab-stars i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: #ffffff;
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  opacity: 0;
+  pointer-events: none;
+}
+.assistant-fab:hover .fab-stars i,
+.assistant-fab:focus-visible .fab-stars i {
+  animation: star-pop 1.4s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes star-pop {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.3) rotate(0deg); }
+  35% { opacity: 1; }
+  70% { opacity: 0.9; transform: translate(var(--dx, 0), var(--dy, 0)) scale(1) rotate(20deg); }
+  100% { opacity: 0; transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.4) rotate(45deg); }
 }
 .fab-ring {
   position: absolute;
@@ -1850,6 +1884,7 @@ textarea.form-input { resize: vertical; min-height: 110px; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.001s !important;
   }
+  .fab-stars i { display: none; }
   .reveal, .reveal-stagger > * { opacity: 1; transform: none; }
   .headline-line span { transform: none; }
   .ticker-track { animation: none; }
