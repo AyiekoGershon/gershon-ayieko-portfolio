@@ -77,13 +77,13 @@ export const PRE_GUARD_QUESTIONS = {
 
 /* ---------------- POST-guard questions (on the generated reply) ---------------- */
 export const POST_GUARD_QUESTIONS = {
-  kb_supported: {
+  kb_unsupported: {
     type: 'noul',
     instructions:
-      'Is every factual claim in the reply supported by the knowledge base provided in the state?',
+      'Does the reply contain any factual claim about Gershon that is NOT supported by the knowledge base provided in the state?',
     criteria: {
-      true: 'All claims about Gershon appear in the knowledge base',
-      false: 'The reply contains claims that are not in the knowledge base',
+      true: 'The reply makes claims about Gershon that are missing from or contradict the knowledge base',
+      false: 'Every claim in the reply is supported by the KB, or the reply makes no factual claims about Gershon at all',
     },
   },
   is_safe: {

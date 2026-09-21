@@ -72,7 +72,7 @@ visitor to email directly. Leaks are never stored by the site itself.
 | Persona lock | system contract + temperature 0.2 + JSON schema |
 | Input | control-char strip, 2000-char cap, injection-pattern refusal |
 | **Jev pre-guard** | one batched System One call: `is_jailbreak` (noul) + `intent` (choice: chat/lead/abuse/off_topic). Blocks jailbreaks ≥ 0.6 and abuse with confidence ≥ 0.5 |
-| **Jev post-guard** | one batched call over `{reply, knowledge_base}`: `kb_supported` + `is_safe` (nouls). Unverified or unsafe replies are replaced with a safe fallback |
+| **Jev post-guard** | one batched call over `{reply, knowledge_base}`: `kb_unsupported` (fails only on claims that contradict the KB) + `is_safe` (nouls). Bad replies are replaced with a safe fallback — never overriding a captured-lead confirmation |
 | Output | JSON validation, 900-char reply cap, graceful fallback message |
 | Rate limit | per-IP, 20 msg/hour, in-memory (per serverless instance) |
 | Abuse | "ignore instructions" style inputs are refused without an LLM call |

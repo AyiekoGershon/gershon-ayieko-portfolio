@@ -322,6 +322,10 @@ export default async function handler(req, res) {
         leadCaptured = await captureLead(parsed.lead, lastUser);
         if (leadCaptured) {
           console.log('[assistant] lead captured:', JSON.stringify(parsed.lead));
+          // Code owns the confirmation — the visitor always gets the same
+          // clean message regardless of model or guard output.
+          parsed.reply = `Thanks — I've captured your request. Gershon will reach out to ${parsed.lead.email} within 48 hours.`;
+          parsed.intent = 'lead';
         } else {
           console.warn('[assistant] lead capture failed:', parsed.lead.email);
           parsed.reply += ' (Heads up: lead capture is offline on the server — please email gershonayieko3@gmail.com directly.)';
@@ -338,16 +342,18 @@ export default async function handler(req, res) {
           POST_GUARD_QUESTIONS
         );
         jevGuard = {
-          kb_supported: post.kb_supported?.noul ?? null,
+          kb_unsupported: post.kb_unsupported?.noul ?? null,
           is_safe: post.is_safe?.noul ?? null,
         };
-        if (
-          (post.kb_supported?.noul ?? 1) < 0.5 ||
-          (post.is_safe?.noul ?? 1) < 0.5
-        ) {
-          parsed.reply =
-            "I couldn't verify my answer against Gershon's knowledge base. You can reach him directly at gershonayieko3@gmail.com.";
-          parsed.intent = 'chat';
+        // Never override a captured-lead confirmation.
+        if (!leadCaptured) {
+          const hasUnsupportedClaims = (post.kb_unsupported?.noul ?? 0) >= 0.5;
+          const unsafe = (post.is_safe?.noul ?? 1) < 0.5;
+          if (hasUnsupportedClaims || unsafe) {
+            parsed.reply =
+              "I couldn't verify my answer against Gershon's knowledge base. You can reach him directly at gershonayieko3@gmail.com.";
+            parsed.intent = 'chat';
+          }
         }
       } catch (err) {
         console.warn('[jev] post-guard skipped:', String(err));
