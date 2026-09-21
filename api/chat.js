@@ -162,18 +162,27 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 /* ---------------- lead capture ---------------- */
 async function captureLead(lead, context) {
   if (!FORMSPREE_ENDPOINT) return false;
-  const res = await fetch(FORMSPREE_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({
-      source: 'rider-assistant',
-      email: lead.email,
-      phone: lead.phone,
-      topic: lead.topic || 'Portfolio inquiry',
-      message: `Lead captured by RIDER assistant.\nLast visitor message: ${context}`,
-    }),
+  const payload = JSON.stringify({
+    source: 'rider-assistant',
+    email: lead.email,
+    phone: lead.phone,
+    topic: lead.topic || 'Portfolio inquiry',
+    message: `Lead captured by RIDER assistant.\nLast visitor message: ${context}`,
   });
-  return res.ok;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: payload,
+      });
+      if (res.ok) return true;
+    } catch {
+      /* network error — retry once */
+    }
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 1000));
+  }
+  return false;
 }
 
 /* ---------------- handler ---------------- */
@@ -291,6 +300,35 @@ export default async function handler(req, res) {
       return;
     }
 
+    // ---- Lead capture FIRST: a guard-driven reply override must never
+    // discard a lead the visitor already gave. ----
+    let leadCaptured = false;
+    if (parsed.intent === 'lead') {
+      // Safety net: if the model didn't mark the lead ready or missed the
+      // email, extract a valid email from the recent conversation directly
+      // (code owns exact extraction — the model only judges intent).
+      if (!parsed.lead.ready || !EMAIL_RE.test(parsed.lead.email)) {
+        const recent = messages
+          .slice(-4)
+          .map((m) => m.content)
+          .join('\n');
+        const found = recent.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+        if (found) {
+          parsed.lead.email = found[0];
+          parsed.lead.ready = true;
+        }
+      }
+      if (parsed.lead.ready && EMAIL_RE.test(parsed.lead.email)) {
+        leadCaptured = await captureLead(parsed.lead, lastUser);
+        if (leadCaptured) {
+          console.log('[assistant] lead captured:', JSON.stringify(parsed.lead));
+        } else {
+          console.warn('[assistant] lead capture failed:', parsed.lead.email);
+          parsed.reply += ' (Heads up: lead capture is offline on the server — please email gershonayieko3@gmail.com directly.)';
+        }
+      }
+    }
+
     // Jev post-guard: verify the reply against the KB and check safety
     let jevGuard = null;
     if (jevEnabled()) {
@@ -310,18 +348,9 @@ export default async function handler(req, res) {
           parsed.reply =
             "I couldn't verify my answer against Gershon's knowledge base. You can reach him directly at gershonayieko3@gmail.com.";
           parsed.intent = 'chat';
-          parsed.lead = { email: '', phone: '', topic: '', ready: false };
         }
       } catch (err) {
         console.warn('[jev] post-guard skipped:', String(err));
-      }
-    }
-
-    let leadCaptured = false;
-    if (parsed.intent === 'lead' && parsed.lead.ready && EMAIL_RE.test(parsed.lead.email)) {
-      leadCaptured = await captureLead(parsed.lead, lastUser);
-      if (!leadCaptured) {
-        parsed.reply += " (Heads up: lead capture is offline on the server — please email gershonayieko3@gmail.com directly.)";
       }
     }
 
