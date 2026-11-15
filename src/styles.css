@@ -1808,11 +1808,16 @@ textarea.form-input { resize: vertical; min-height: 110px; }
 .assistant-panel {
   position: fixed;
   right: 22px;
-  bottom: 96px;
+  /* --pb: gap below the panel (clears the chat bubble).
+     Height is capped so the panel never runs under the header or off-screen. */
+  --pb: 96px;
+  --pt: 86px;
+  bottom: var(--pb);
   z-index: 870;
   width: min(392px, calc(100vw - 28px));
-  height: min(600px, calc(100svh - 140px));
-  min-height: 420px;
+  height: min(600px, calc(100svh - var(--pb) - var(--pt)));
+  min-height: 0;
+  transition: bottom 0.45s var(--ease-out), height 0.45s var(--ease-out);
   display: flex;
   flex-direction: column;
   background: var(--bg2);
@@ -1820,6 +1825,14 @@ textarea.form-input { resize: vertical; min-height: 110px; }
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.65);
 }
 .assistant-panel[hidden] { display: none; }
+/* follow the bubble up when the sticky CTA bar is showing */
+.assistant-fab.raised + .assistant-panel { --pb: 172px; }
+/* short windows / zoomed-in browsers: keep the conversation visible */
+@media (max-height: 640px) {
+  .ap-foot { display: none; }
+  .ap-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .ap-chips button { flex-shrink: 0; }
+}
 
 .ap-head {
   display: flex;
@@ -1867,6 +1880,7 @@ textarea.form-input { resize: vertical; min-height: 110px; }
 
 .ap-log {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 1rem 1rem 0.5rem;
   display: flex;
@@ -2090,9 +2104,9 @@ textarea.form-input { resize: vertical; min-height: 110px; }
   .pipeline-grid { grid-template-columns: 1fr 1fr; }
   .assistant-panel {
     right: 12px;
-    bottom: 88px;
+    --pb: 88px;
+    --pt: 82px;
     width: calc(100vw - 24px);
-    height: min(560px, calc(100svh - 120px));
   }
   .assistant-fab { right: 14px; bottom: 16px; }
   .assistant-fab.raised { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
