@@ -30,16 +30,33 @@ Gershon builds and offers:
 - Machine learning: scikit-learn, TensorFlow, PyTorch, OpenCV, anomaly detection, ML pipelines
 
 [EXPERIENCE]
-- Decodelabs — Data / AI / Automation Engineer (Jun 2026 - Present): internal applications, Jira analytics, n8n workflows, Google Apps Script integrations
-- MoKo Home + Living — Data Analytics / Automation (May 2026 - Jun 2026): inventory anomaly detection, maintenance tracking application with Google Sheets API integration, operational dashboards
-- Oasis Infobyte — Data Science Intern (2025): exploratory data analysis, classification and regression exercises
-- Deloitte — Data Analytics Job Simulation: interactive Tableau dashboards, Excel data classification, forensic analytics
+- Safaricom — Data Engineering Intern (incoming, starting Nov 2026), Nairobi
+- Hots For Data Community — Lead Web Developer, freelance (Sep 2026 - Present, remote): led design and deployment of the community's web platform; Supabase (PostgreSQL) + Express.js backend for member profiles, event registrations and learning resources; React 19 front end with REST APIs — live at https://hotsfordata.co.ke/
+- Decodelabs — Python Developer Intern (Jun 2026 - Present, remote): built and shipped 5+ production-ready Python GUI apps with Tkinter; multi-repository GitHub workflows; technical documentation
+- Growing Missionaries Church — Full Stack Developer, freelance (May 2026 - Oct 2026, Migori County, remote): centralised ERP system serving 9 regional branches; Supabase + Express.js backend; React 19 admin interface; first cross-branch reporting
+- Oasis Infobyte — Data Science Intern, fellowship (May 2026 - Jun 2026, remote): statistical and ML models (linear regression, decision trees, classification, clustering), feature engineering, peer code reviews
+- MoKo Home + Living (Watervale Investments Ltd) — Data Science & IT Support Intern (Jun 2025 - Sep 2025, Nairobi): MySQL and Snowflake queries; Cradle Variance Project reconciliation SQL; Inventory Discrepancy Project anomaly detection; Power BI, Apache Superset and Looker Studio dashboards; maintenance-scheduling web app on the Google Sheets API; n8n + Google Apps Script maintenance alerts; Jira Analytics sprint reporting; IT support (hardware/software, LAN/Wi-Fi, server maintenance)
+- Deloitte (via Forage) — Data Analytics Job Simulation (Jun 2025, virtual): Tableau and Looker Studio dashboards, Excel data classification, forensic technology
 
 [EDUCATION]
 - BSc in Data Science — The Co-operative University of Kenya (Sep 2022 - Present)
 - Data Privacy & Protection — Strathmore University (Sep - Oct 2024)
 - Cybersecurity Fundamentals — CyberShujaa Program (Jun - Aug 2024)
 - Professional Data Analysis — Microsoft Learning & LinkedIn (Apr - May 2024)
+
+[LIVE PROJECTS — deployed and in real-world use]
+- Hots For Data: official web platform for an EdTech data community — React 19, Express.js, Supabase — https://hotsfordata.co.ke/
+- Growing Missionaries Centre: official church website for a ministry in Isebania, Kenya (TypeScript) — https://growingmissionariescentre.co.ke/
+- Pastor Joel Maina: production personal-brand website for a pastor, on a custom domain — https://www.pastorjoelmaina.com/
+- Bright Future Academy: school marketing and admissions website, Migori, Kenya (TypeScript) — https://bfa-web-mvp-gilt.vercel.app/
+- CrediMerge: AI-powered financial-health and credit platform for gig workers (React, Node, AI guidance) — https://credimerge-delta.vercel.app
+- Napeiz Electronics Store: e-commerce site for an electronics retailer on Supabase — https://napeizelectronicswebsite-eight.vercel.app
+- Sky Survey Platform web app: https://simple-survey-web.vercel.app (API on FastAPI + MySQL)
+- Travel Documentation Assistant: https://gershontravelassistant.vercel.app/
+
+[BLUEPRINTS — designed, in build, not yet shipped]
+- Mobile-money lakehouse (Airflow, dbt), Nairobi transit streaming (Kafka, Spark), Kenya Law RAG copilot, WhatsApp support agent, invoice-to-ledger automation, lead enrichment automation, retail sales dashboard, Nairobi air-quality dashboard, maize leaf disease detection, churn prediction with SHAP.
+- If asked, say these are in build — do not describe them as finished or deployed.
 
 [PROJECTS]
 - Spotify Engineering Pipeline: automated Spotify Web API to Supabase (PostgreSQL) daily data pipeline (Python, ETL, scheduling)

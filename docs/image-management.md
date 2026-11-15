@@ -65,3 +65,15 @@ files, no hotlinks, no licensing exposure. If real screenshots become available:
 - WebP/AVIF preferred; no image over ~200 KB on a card.
 - `loading="lazy"` for below-the-fold images (already applied to the about emblem).
 - Only copyright-safe or self-produced material is permitted.
+
+## Hero portrait
+
+`photo-source.jpg` (studio portrait) is cut out of its light backdrop by
+`python scripts/process_portrait.py` (colour flood-fill + OpenCV GrabCut, no ML
+model) → `public/assets/portrait.webp` / `.png`. Re-run after replacing the photo.
+
+## Project images
+
+`public/assets/projects/*.webp` — 1000×625 WebP. Live-project images are screenshots
+of the deployed sites; the rest are Unsplash photos (see `CREDITS.md` in that folder).
+Reference them from `src/data/projects.js` via the `img` field.

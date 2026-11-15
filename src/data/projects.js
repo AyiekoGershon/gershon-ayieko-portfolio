@@ -2,151 +2,328 @@
  * Content data — separated from UI so projects can be added/edited
  * without touching markup or components.
  *
- * Field reference (only what is used):
+ * Field reference:
  *  - title        project display name
  *  - categories   one or more of: data-engineering, ai-engineering,
  *                 automation, analytics, machine-learning, software
- *  - summary      problem -> system -> outcome, one strong sentence
+ *  - status       'live'      → deployed and used in the real world
+ *                 'shipped'   → complete, public on GitHub
+ *                 'blueprint' → designed and in build (no repo yet)
  *  - description  two short sentences max (card copy)
- *  - stack        technologies verified by GitHub / resume
- *  - github       repository URL (verified) or null
- *  - year         last-activity / creation year (verified)
- *  - featured     true -> featured treatment in grid
- *  - visual       inline SVG motif variant
+ *  - stack        technologies
+ *  - live         public URL of the deployed product (or omitted)
+ *  - github       repository URL (or null / omitted)
+ *  - client       who it was built for (live client work)
+ *  - year         last-activity / target year
+ *  - img          static image in /public (assets/projects/*.webp)
+ *  - image        frame base path hydrated by main.js (frames/frame-0X)
+ *  - visual       inline SVG motif fallback when no image is available
  */
 
 export const projects = [
+  /* ---------------- LIVE — real-world, deployed ---------------- */
   {
-    title: 'Spotify Engineering Pipeline',
-    categories: ['data-engineering', 'automation'],
-    summary:
-      'An automated end-to-end data pipeline that collects, archives, and analyzes daily music charts.',
+    title: 'Hots For Data Platform',
+    categories: ['software', 'data-engineering'],
+    status: 'live',
+    client: 'EdTech data community · Nairobi',
     description:
-      'Connects the Spotify Web API to a Supabase (PostgreSQL) warehouse and runs daily snapshot jobs — a complete extract, load, transform, and analytics loop.',
-    stack: ['Python', 'Spotify API', 'Supabase', 'PostgreSQL', 'ETL', 'Scheduling'],
-    github: 'https://github.com/AyiekoGershon/spotify-engineering',
+      'Official platform for an African data-learning community — tracks, events, registrations and learning resources, with member-engagement data centralised for organisers.',
+    stack: ['React 19', 'Express.js', 'Supabase', 'PostgreSQL', 'REST APIs'],
+    live: 'https://hotsfordata.co.ke/',
+    github: null,
     year: '2026',
-    featured: true,
-    visual: 'pipeline',
-    image: 'frames/frame-03',
+    img: 'assets/projects/hotsfordata.webp',
+    visual: 'commerce',
   },
   {
-    title: 'Finance Portfolio Pipeline',
-    categories: ['data-engineering', 'automation'],
-    summary:
-      'Automated CoinGecko → Supabase market-data pipeline with database-side ETL triggers.',
+    title: 'Growing Missionaries Centre',
+    categories: ['software'],
+    status: 'live',
+    client: 'Church · Isebania, Kenya',
     description:
-      'Market data is pulled, transformed inside PostgreSQL, and kept fresh without manual runs — evidence of database-first pipeline design.',
-    stack: ['Python', 'CoinGecko API', 'Supabase', 'PostgreSQL', 'Triggers'],
-    github: 'https://github.com/AyiekoGershon/finance-portfolio-pipeline',
+      'Official website for a ministry in Isebania — ministries, service times, branches, outreach programmes, and online giving in one fast, mobile-first site.',
+    stack: ['TypeScript', 'React', 'Responsive UI', 'SEO'],
+    live: 'https://growingmissionariescentre.co.ke/',
+    github: 'https://github.com/AyiekoGershon/Growing-Ministrie-Center-Web',
     year: '2026',
-    featured: true,
-    visual: 'pipeline',
-    image: 'frames/frame-07',
+    img: 'assets/projects/gmc.webp',
+    visual: 'commerce',
+  },
+  {
+    title: 'Pastor Joel Maina — Personal Brand',
+    categories: ['software'],
+    status: 'live',
+    client: 'Pastor · Nairobi, Kenya',
+    description:
+      'Production portfolio for a pastor and counsellor — ministry areas, publications, gallery, donations and contact, on a custom domain.',
+    stack: ['HTML', 'CSS', 'JavaScript', 'Custom Domain'],
+    live: 'https://www.pastorjoelmaina.com/',
+    github: 'https://github.com/AyiekoGershon/PASTOR-Joel-Maina-Portfolio',
+    year: '2026',
+    img: 'assets/projects/joelmaina.webp',
+    visual: 'commerce',
+  },
+  {
+    title: 'Bright Future Academy',
+    categories: ['software'],
+    status: 'live',
+    client: 'Private school · Migori, Kenya',
+    description:
+      'Marketing and information portal for a school — route-based navigation, academics, facilities, news, and an admissions-driven enquiry flow.',
+    stack: ['TypeScript', 'React', 'Vercel', 'Routing'],
+    live: 'https://bfa-web-mvp-gilt.vercel.app/',
+    github: 'https://github.com/AyiekoGershon/BFA-web-mvp',
+    year: '2026',
+    img: 'assets/projects/bfa.webp',
+    visual: 'commerce',
+  },
+  {
+    title: 'CrediMerge — AI Credit Health',
+    categories: ['ai-engineering', 'analytics'],
+    status: 'live',
+    client: 'Fintech product',
+    description:
+      'AI-powered financial-health platform for gig workers: turns income, loans and cash flow into an explainable score, forecasts, and AI debt-consolidation guidance.',
+    stack: ['React', 'Node.js', 'Gemini AI', 'Forecasting', 'Analytics'],
+    live: 'https://credimerge-delta.vercel.app',
+    github: 'https://github.com/AyiekoGershon/Credimerge',
+    year: '2026',
+    img: 'assets/projects/gigcred.webp',
+    visual: 'llm',
+  },
+  {
+    title: 'Napeiz Electronics Store',
+    categories: ['software'],
+    status: 'live',
+    client: 'Electronics retailer · Migori, Kenya',
+    description:
+      'Full-stack e-commerce store for phones, TVs and appliances — catalogue, search, cart, WhatsApp ordering and local delivery on a Supabase backend.',
+    stack: ['JavaScript', 'HTML', 'CSS', 'Supabase', 'PostgreSQL'],
+    live: 'https://napeizelectronicswebsite-eight.vercel.app',
+    github: 'https://github.com/AyiekoGershon/Napeiz-Electronics-Website-mvp',
+    year: '2026',
+    img: 'assets/projects/napeiz.webp',
+    visual: 'commerce',
+  },
+  {
+    title: 'Sky Survey Platform',
+    categories: ['software'],
+    status: 'live',
+    client: 'Survey management system',
+    description:
+      'Multi-tier survey system: FastAPI + MySQL REST API, a dark-themed web admin, and a Flutter mobile client — three codebases, one contract.',
+    stack: ['FastAPI', 'MySQL', 'Flutter', 'JavaScript', 'REST'],
+    live: 'https://simple-survey-web.vercel.app',
+    github: 'https://github.com/AyiekoGershon/Survey-API',
+    year: '2026',
+    img: 'assets/projects/survey.webp',
+    visual: 'api',
   },
   {
     title: 'Travel Documentation Assistant',
     categories: ['ai-engineering'],
-    summary:
-      'A full-stack, AI-powered Q&A system for visa, passport, and travel-advisory documentation worldwide.',
+    status: 'live',
+    client: 'AI Q&A product',
     description:
-      'Uses the DeepSeek LLM behind a TypeScript stack to answer real-time travel-documentation questions — an applied LLM system, not a demo.',
-    stack: ['TypeScript', 'DeepSeek', 'LLM', 'Full-Stack', 'RAG'],
+      'Full-stack LLM assistant answering visa, passport and travel-advisory questions worldwide, powered by DeepSeek behind a TypeScript stack.',
+    stack: ['TypeScript', 'DeepSeek', 'LLM', 'RAG', 'Full-Stack'],
+    live: 'https://gershontravelassistant.vercel.app/',
     github: 'https://github.com/AyiekoGershon/Travel-Documentation-Assistant---Q-A-LLM-System',
     year: '2026',
-    featured: true,
-    visual: 'llm',
     image: 'frames/frame-02',
+    visual: 'llm',
+  },
+
+  /* ---------------- SHIPPED — public on GitHub ---------------- */
+  {
+    title: 'Spotify Engineering Pipeline',
+    categories: ['data-engineering', 'automation'],
+    status: 'shipped',
+    description:
+      'Spotify Web API → Supabase (PostgreSQL) warehouse with daily snapshot jobs on GitHub Actions and in-database triggers for nested payloads.',
+    stack: ['Python', 'Spotify API', 'Supabase', 'PostgreSQL', 'GitHub Actions'],
+    github: 'https://github.com/AyiekoGershon/spotify-engineering',
+    year: '2026',
+    image: 'frames/frame-03',
+    visual: 'pipeline',
   },
   {
-    title: 'Survey Platform',
-    categories: ['software'],
-    summary:
-      'A multi-tier survey system: FastAPI + MySQL REST API, dark-themed web admin, and a Flutter mobile client.',
+    title: 'Finance Portfolio Pipeline',
+    categories: ['data-engineering', 'automation'],
+    status: 'shipped',
     description:
-      'Three codebases, one contract — REST architecture spanning API design, database integration, and cross-platform frontends.',
-    stack: ['FastAPI', 'MySQL', 'Flutter', 'JavaScript', 'REST'],
-    github: 'https://github.com/AyiekoGershon/Survey-API',
-    year: '2025',
-    featured: true,
-    visual: 'api',
+      'Automated CoinGecko → Supabase market-data pipeline; transformations run inside PostgreSQL via triggers, so data stays fresh without manual runs.',
+    stack: ['Python', 'CoinGecko API', 'Supabase', 'PostgreSQL', 'Triggers'],
+    github: 'https://github.com/AyiekoGershon/finance-portfolio-pipeline',
+    year: '2026',
+    image: 'frames/frame-07',
+    visual: 'pipeline',
   },
   {
     title: 'Traffic Speed Detection',
     categories: ['machine-learning'],
-    summary:
-      'Computer-vision system that detects and estimates vehicle speed in a video stream.',
+    status: 'shipped',
     description:
-      'Built with OpenCV and NumPy to automate traffic analysis — real-time detection, tracking, and speed estimation from raw footage.',
+      'Computer-vision system that detects, tracks and estimates vehicle speed from raw video — groundwork for smart traffic and road-safety monitoring.',
     stack: ['Python', 'OpenCV', 'NumPy', 'Computer Vision'],
     github: 'https://github.com/AyiekoGershon/Traffic-speed-Detection',
     year: '2025',
-    featured: true,
+    img: 'assets/projects/traffic.webp',
     visual: 'vision',
   },
   {
     title: 'Email & SMS Spam Detection',
     categories: ['machine-learning'],
-    summary:
-      'NLP system that classifies messages as spam or legitimate.',
+    status: 'shipped',
     description:
-      'Text preprocessing, feature extraction, and a comparison of multiple classifiers — a complete, evaluable ML workflow.',
+      'NLP classifier separating spam from legitimate messages — text preprocessing, TF-IDF features, and a comparison of models on imbalanced data.',
     stack: ['Python', 'NLP', 'Scikit-learn', 'TF-IDF'],
     github: 'https://github.com/AyiekoGershon/Email-And-SMS-Spam-Detection',
     year: '2025',
-    featured: false,
+    img: 'assets/projects/spam.webp',
     visual: 'nlp',
   },
   {
     title: 'Car Price Prediction',
     categories: ['machine-learning'],
-    summary:
-      'Regression project predicting used-car selling prices from vehicle features.',
+    status: 'shipped',
     description:
-      'Age, brand, transmission, and kilometers driven feed an end-to-end regression pipeline with model diagnostics.',
+      'Regression pipeline predicting used-car prices from age, brand, transmission and mileage, with feature engineering and hyperparameter tuning.',
     stack: ['Python', 'Pandas', 'Scikit-learn', 'Regression'],
     github: 'https://github.com/AyiekoGershon/Car-Price-Prediction',
     year: '2025',
-    featured: false,
+    img: 'assets/projects/car.webp',
     visual: 'regression',
   },
   {
-    title: 'Napeiz Electronics Store',
-    categories: ['software'],
-    summary:
-      'A full-stack e-commerce MVP for premium electronics built on Supabase.',
-    description:
-      'Catalog, cart, and order flows wired to a hosted PostgreSQL backend — browser application engineering end to end.',
-    stack: ['JavaScript', 'HTML', 'CSS', 'Supabase'],
-    github: 'https://github.com/AyiekoGershon/Napeiz-Electronics-Website-mvp',
-    year: '2026',
-    featured: false,
-    visual: 'commerce',
-  },
-  {
-    title: 'Deloitte Data Analytics Simulation',
+    title: 'Deloitte Forensic Analytics',
     categories: ['analytics'],
-    summary:
-      'Job simulation covering data analysis and forensic technology at Deloitte.',
+    status: 'shipped',
     description:
-      'Built interactive Tableau dashboards and performed data classification with Excel — business intelligence applied to a forensic context.',
+      'Job simulation in data analysis and forensic technology — interactive Tableau dashboards and Excel-based data classification.',
     stack: ['Tableau', 'Excel', 'Forensic Analysis', 'BI'],
     github: null,
     year: '2024',
-    featured: false,
+    img: 'assets/projects/forensic.webp',
     visual: 'analytics',
+  },
+
+  /* ---------------- BLUEPRINTS — two per role, in build ---------------- */
+  {
+    title: 'Mobile-Money Lakehouse',
+    categories: ['data-engineering'],
+    status: 'blueprint',
+    description:
+      'Batch lakehouse for M-Pesa-style transaction data: Airflow-orchestrated ingestion, dbt models with tests, and a star schema ready for finance reporting.',
+    stack: ['Airflow', 'dbt', 'DuckDB', 'Snowflake', 'Great Expectations'],
+    year: '2026',
+    img: 'assets/projects/lakehouse.webp',
+    visual: 'pipeline',
+  },
+  {
+    title: 'Nairobi Transit Stream',
+    categories: ['data-engineering'],
+    status: 'blueprint',
+    description:
+      'Real-time matatu GPS pipeline — Kafka ingestion and Spark Structured Streaming for ETAs and congestion, served to a live map dashboard.',
+    stack: ['Kafka', 'Spark Streaming', 'PostgreSQL', 'PostGIS', 'Docker'],
+    year: '2026',
+    img: 'assets/projects/streaming.webp',
+    visual: 'pipeline',
+  },
+  {
+    title: 'Kenya Law RAG Copilot',
+    categories: ['ai-engineering'],
+    status: 'blueprint',
+    description:
+      'Retrieval-augmented assistant over Kenyan statutes and case law with cited answers, hybrid search, and an evaluation harness for faithfulness.',
+    stack: ['LLM', 'pgvector', 'Hybrid Search', 'FastAPI', 'RAG Evals'],
+    year: '2026',
+    img: 'assets/projects/legal-rag.webp',
+    visual: 'llm',
+  },
+  {
+    title: 'WhatsApp Support Agent',
+    categories: ['ai-engineering', 'automation'],
+    status: 'blueprint',
+    description:
+      'Tool-using AI agent for SME customer support on WhatsApp — order lookup, FAQs from a knowledge base, and human hand-off behind guardrails.',
+    stack: ['AI Agents', 'Tool Use', 'WhatsApp API', 'n8n', 'Supabase'],
+    year: '2026',
+    img: 'assets/projects/support-agent.webp',
+    visual: 'llm',
+  },
+  {
+    title: 'Invoice-to-Ledger Automation',
+    categories: ['automation'],
+    status: 'blueprint',
+    description:
+      'Emailed invoices are captured, parsed with OCR + LLM extraction, validated, and posted to Google Sheets or accounting — with an approval step.',
+    stack: ['n8n', 'OCR', 'LLM Extraction', 'Google Sheets API', 'Apps Script'],
+    year: '2026',
+    img: 'assets/projects/invoice.webp',
+    visual: 'pipeline',
+  },
+  {
+    title: 'Lead Enrichment & Outreach',
+    categories: ['automation'],
+    status: 'blueprint',
+    description:
+      'Form and CRM leads are enriched, scored, and routed to personalised follow-up sequences automatically — plus a weekly pipeline report.',
+    stack: ['n8n', 'APIs', 'Lead Scoring', 'Gmail API', 'Cron'],
+    year: '2026',
+    img: 'assets/projects/outreach.webp',
+    visual: 'pipeline',
+  },
+  {
+    title: 'Retail Sales Command Center',
+    categories: ['analytics'],
+    status: 'blueprint',
+    description:
+      'Executive dashboard for a retail chain — sales, margin, stock-outs and branch performance, modelled in SQL with drill-downs and alerts.',
+    stack: ['Power BI', 'SQL', 'DAX', 'Data Modelling'],
+    year: '2026',
+    img: 'assets/projects/retail.webp',
+    visual: 'analytics',
+  },
+  {
+    title: 'Nairobi Air Quality Monitor',
+    categories: ['analytics'],
+    status: 'blueprint',
+    description:
+      'Public dashboard tracking PM2.5 across Nairobi from open sensor data, with trends, health thresholds, and neighbourhood comparisons.',
+    stack: ['Apache Superset', 'Python', 'OpenAQ API', 'PostgreSQL'],
+    year: '2026',
+    img: 'assets/projects/airquality.webp',
+    visual: 'analytics',
+  },
+  {
+    title: 'Maize Leaf Disease Detection',
+    categories: ['machine-learning'],
+    status: 'blueprint',
+    description:
+      'CNN that diagnoses common maize diseases from a phone photo, exported to TensorFlow Lite for offline use by smallholder farmers.',
+    stack: ['TensorFlow', 'Transfer Learning', 'TF Lite', 'Computer Vision'],
+    year: '2026',
+    img: 'assets/projects/crop.webp',
+    visual: 'vision',
+  },
+  {
+    title: 'Churn Prediction & Explainability',
+    categories: ['machine-learning'],
+    status: 'blueprint',
+    description:
+      'Gradient-boosted churn model with SHAP explanations, served through a FastAPI endpoint so retention teams see who is at risk — and why.',
+    stack: ['XGBoost', 'SHAP', 'FastAPI', 'MLflow'],
+    year: '2026',
+    img: 'assets/projects/churn.webp',
+    visual: 'regression',
   },
 ];
 
-export const filters = [
-  { id: 'all', label: 'All Systems' },
-  { id: 'data-engineering', label: 'Data Engineering' },
-  { id: 'ai-engineering', label: 'AI Engineering' },
-  { id: 'automation', label: 'Automation' },
-  { id: 'machine-learning', label: 'Machine Learning' },
-  { id: 'analytics', label: 'Analytics' },
-  { id: 'software', label: 'Software' },
-];
+/** Status filters match project.status; the rest match project.categories. */
+export const STATUS_FILTERS = ['live', 'shipped', 'blueprint'];
 
 /** Inline SVG schematic motifs for project cards (no external imagery). */
 export function visualSVG(variant) {

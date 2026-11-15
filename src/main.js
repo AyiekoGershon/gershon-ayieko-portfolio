@@ -1,5 +1,5 @@
 import './styles.css';
-import { projects, visualSVG } from './data/projects.js';
+import { projects, visualSVG, STATUS_FILTERS } from './data/projects.js';
 import { assistantGreeting } from './data/knowledge-base.js';
 
 /* ============================================================
@@ -31,6 +31,9 @@ function showToast(title, msg, isError = false) {
    ============================================================ */
 const splash = document.getElementById('splash');
 const splashProgress = document.getElementById('splashProgress');
+const splashBar = document.getElementById('splashBar');
+const splashOrbit = document.getElementById('splashOrbit');
+const splashPct = document.getElementById('splashPct');
 const bootText = document.getElementById('bootText');
 const splashSkip = document.getElementById('splashSkip');
 
@@ -45,34 +48,45 @@ const BOOT_LINES = [
 
 let splashFinished = false;
 
+function setSplashProgress(ratio) {
+  const pct = Math.round(ratio * 100);
+  splashProgress.style.width = (ratio * 100).toFixed(1) + '%';
+  splashOrbit.style.strokeDashoffset = String(100 - ratio * 100);
+  splashPct.textContent = String(pct).padStart(2, '0');
+  splashBar.setAttribute('aria-valuenow', String(pct));
+}
+
 function finishSplash() {
   if (splashFinished) return;
   splashFinished = true;
-  splashProgress.style.width = '100%';
+  setSplashProgress(1);
   bootText.textContent = BOOT_LINES[BOOT_LINES.length - 1];
-  splash.classList.add('done');
+  // Stage 1: emblem flares; stage 2: curtains split to reveal the site.
+  splash.classList.add('complete');
+  setTimeout(() => {
+    splash.classList.add('done');
+    document.body.classList.add('site-ready');
+  }, REDUCED_MOTION ? 0 : 380);
   setTimeout(() => {
     splash.remove();
-    document.body.classList.add('site-ready');
     const brand = document.querySelector('.brand');
-    if (brand) brand.focus({ preventScroll: true });
-  }, REDUCED_MOTION ? 50 : 720);
+    if (brand) brand.focus({ preventScroll: true, focusVisible: false });
+  }, REDUCED_MOTION ? 60 : 1400);
 }
 
 if (REDUCED_MOTION) {
-  // Reduced motion: brief static brand state, minimal wait.
-  splashProgress.style.width = '100%';
+  setSplashProgress(1);
   bootText.textContent = 'all systems ready.';
   setTimeout(finishSplash, 700);
 } else {
-  const DURATION = 2300;
+  const DURATION = 2400;
   const start = performance.now();
 
   function tick(now) {
     if (splashFinished) return;
     const pct = Math.min((now - start) / DURATION, 1);
     const eased = 1 - Math.pow(1 - pct, 2.2);
-    splashProgress.style.width = (eased * 100).toFixed(1) + '%';
+    setSplashProgress(eased);
     const lineIdx = Math.min(
       BOOT_LINES.length - 1,
       Math.floor(eased * BOOT_LINES.length)
@@ -130,10 +144,33 @@ function hydrateAllFrames() {
 const projectGrid = document.getElementById('projectGrid');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
+const STATUS_LABEL = { live: 'LIVE', shipped: 'SHIPPED', blueprint: 'BLUEPRINT' };
+const ARROW = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>';
+
+function projectLinks(p) {
+  const links = [];
+  if (p.live) {
+    links.push(`<a class="project-link link-live" href="${p.live}" target="_blank" rel="noopener" aria-label="Open ${p.title} live site">LIVE SITE ${ARROW}</a>`);
+  }
+  if (p.github) {
+    links.push(`<a class="project-link" href="${p.github}" target="_blank" rel="noopener" aria-label="${p.title} on GitHub">CODE ${ARROW}</a>`);
+  }
+  if (!links.length) {
+    links.push(
+      p.status === 'blueprint'
+        ? `<a class="project-link" href="#contact">BUILD THIS WITH ME ${ARROW}</a>`
+        : `<span class="project-link is-static">CASE STUDY</span>`
+    );
+  }
+  return links.join('');
+}
+
 function renderProjects(filter = 'all') {
-  const list = projects.filter(
-    (p) => filter === 'all' || p.categories.includes(filter)
-  );
+  const list = projects.filter((p) => {
+    if (filter === 'all') return true;
+    if (STATUS_FILTERS.includes(filter)) return p.status === filter;
+    return p.categories.includes(filter);
+  });
 
   if (list.length === 0) {
     projectGrid.innerHTML = `<div class="project-none">// no systems in this channel</div>`;
@@ -143,16 +180,23 @@ function renderProjects(filter = 'all') {
   projectGrid.innerHTML = list
     .map(
       (p, i) => `
-      <article class="project-card info-card" style="--i:${i}">
+      <article class="project-card info-card status-${p.status}" style="--i:${i}">
         <div class="project-visual">
           ${visualSVG(p.visual)}
-          ${p.image ? `<img class="project-photo" data-frame="${p.image}" alt="" loading="lazy" />` : ''}
-          <div class="visual-scan" aria-hidden="true"></div>
+          ${
+            p.img
+              ? `<img class="project-photo loaded" src="${p.img}" alt="" loading="lazy" decoding="async" />`
+              : p.image
+                ? `<img class="project-photo" data-frame="${p.image}" alt="" loading="lazy" />`
+                : ''
+          }
+          <div class="visual-shade" aria-hidden="true"></div>
+          <div class="status-pill status-pill--${p.status}"><i aria-hidden="true"></i>${STATUS_LABEL[p.status]}</div>
           <div class="visual-tag">${p.categories[0].toUpperCase().replace('-', ' ')}</div>
         </div>
         <div class="project-body">
           <div class="project-top">
-            <span class="project-cat">${p.categories.join(' · ').toUpperCase()}</span>
+            <span class="project-cat">${p.client || p.categories.join(' · ').replace(/-/g, ' ').toUpperCase()}</span>
             <span class="project-year">${p.year}</span>
           </div>
           <h3 class="project-title">${p.title}</h3>
@@ -160,17 +204,7 @@ function renderProjects(filter = 'all') {
           <div class="project-stack">
             ${p.stack.map((t) => `<span>${t}</span>`).join('')}
           </div>
-          <div class="project-foot">
-            ${
-              p.github
-                ? `<a class="project-link" href="${p.github}" target="_blank" rel="noopener" aria-label="${p.title} on GitHub">
-                     VIEW REPOSITORY
-                     <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
-                   </a>`
-                : `<span class="project-flag">CASE STUDY</span>`
-            }
-            ${p.featured ? `<span class="project-flag">FEATURED</span>` : ''}
-          </div>
+          <div class="project-foot">${projectLinks(p)}</div>
         </div>
       </article>`
     )
@@ -286,7 +320,7 @@ const sectionObserver = new IntersectionObserver(
   },
   { rootMargin: '-38% 0px -55% 0px' }
 );
-['capabilities', 'systems', 'experience', 'stack', 'about', 'assistant', 'contact'].forEach((id) => {
+['hero', 'capabilities', 'systems', 'experience', 'stack', 'about', 'assistant', 'contact'].forEach((id) => {
   const el = document.getElementById(id);
   if (el) sectionObserver.observe(el);
 });
