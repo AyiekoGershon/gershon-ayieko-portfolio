@@ -19,4 +19,4 @@ credited here anyway). Live-project images are screenshots of Gershon's own depl
 | spam.webp | https://unsplash.com/photos/wAZ8pS2D_OA |
 | car.webp | https://unsplash.com/photos/2UowTLCTTUc |
 | forensic.webp | https://unsplash.com/photos/mCqi3MljC4E |
-| hotsfordata, gmc, joelmaina, bfa, napeiz, gigcred, survey .webp | screenshots of the live sites |
+| hotsfordata, gmc, joelmaina, napeiz, survey .webp | screenshots of the live sites |

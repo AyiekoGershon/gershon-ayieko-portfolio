@@ -48,8 +48,6 @@ Gershon builds and offers:
 - Hots For Data: official web platform for an EdTech data community — React 19, Express.js, Supabase — https://hotsfordata.co.ke/
 - Growing Missionaries Centre: official church website for a ministry in Isebania, Kenya (TypeScript) — https://growingmissionariescentre.co.ke/
 - Pastor Joel Maina: production personal-brand website for a pastor, on a custom domain — https://www.pastorjoelmaina.com/
-- Bright Future Academy: school marketing and admissions website, Migori, Kenya (TypeScript) — https://bfa-web-mvp-gilt.vercel.app/
-- CrediMerge: AI-powered financial-health and credit platform for gig workers (React, Node, AI guidance) — https://credimerge-delta.vercel.app
 - Napeiz Electronics Store: e-commerce site for an electronics retailer on Supabase — https://napeizelectronicswebsite-eight.vercel.app
 - Sky Survey Platform web app: https://simple-survey-web.vercel.app (API on FastAPI + MySQL)
 - Travel Documentation Assistant: https://gershontravelassistant.vercel.app/
